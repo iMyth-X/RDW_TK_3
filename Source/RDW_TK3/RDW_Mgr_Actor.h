@@ -6,6 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "RDW_Mgr_Actor.generated.h"
 
+// Still not correct, I need to figure how to embed this within the class itself
+UENUM(BlueprintType)
+enum EMovementController { keyboard, AutoPilot, Tracker };
+
 UCLASS()
 class RDW_TK3_API ARDW_Mgr_Actor : public AActor
 {
@@ -14,6 +18,21 @@ class RDW_TK3_API ARDW_Mgr_Actor : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ARDW_Mgr_Actor();
+
+	//AddToolTip: "Select if you wish to run simulation from commandline in UE4 batchmode."
+	//Needed?
+	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
+		bool runInTestMode = false;
+
+	//AddToolTip: "How user movement is controlled"
+	/****************   Gotto Fix!!!! *****************************/
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Redirected Walking")
+	//	EMovementController MOVEMENT_CONTROLLER = Tracker;
+
+	//ToolTip: "Maximum translation gain applied"
+	//Range: (0, 5)
+	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
+		float MaxTransGain;
 
 protected:
 	// Called when the game starts or when spawned
