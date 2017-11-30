@@ -34,6 +34,26 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
 		float MaxTransGain;
 
+	//ToolTip: "Minimumlation gain applied"
+	//Range: (-.99f, 0)
+	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
+		float MinTransGain;
+
+	//ToolTip: "Maximum rotation gain applied"
+	//Range: (0, 5)
+	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
+		float MaxRotGain;
+
+	//ToolTip: "Minimumlation rotation gain applied"
+	//Range: (-.99f, 0)
+	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
+		float MinRotGain;
+
+	//ToolTip: "Radius applied by curvature gain"
+	//Range: (1, 23)
+	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
+		float CurvatureRadius;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
