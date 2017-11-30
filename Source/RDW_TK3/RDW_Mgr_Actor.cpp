@@ -14,6 +14,8 @@ ARDW_Mgr_Actor::ARDW_Mgr_Actor():
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	startTimeOfProgram = FDateTime::Now();
+	//UE_LOG(LogTemp, Warning, TEXT("STart time of program = %s"), *startTimeOfProgram.ToString());
 }
 
 // Called when the game starts or when spawned
@@ -27,6 +29,16 @@ void ARDW_Mgr_Actor::BeginPlay()
 void ARDW_Mgr_Actor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+void ARDW_Mgr_Actor::constructAvatar()
+{
+
+}
+
+void ARDW_Mgr_Actor::getBody()
+{
 
 }
 

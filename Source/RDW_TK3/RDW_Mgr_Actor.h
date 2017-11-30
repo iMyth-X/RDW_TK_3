@@ -104,19 +104,19 @@ public:
 	UObject *targetWayPoint;
 
 	bool inReset = false;
-	FString startTimeOfProgram;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-
-	float simulatedTime = 0.0f;
-
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
-	
+	void constructAvatar();
+	void getBody();
+
+private:
+	FDateTime startTimeOfProgram;
+
 };
