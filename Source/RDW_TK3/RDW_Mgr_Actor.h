@@ -54,11 +54,66 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
 		float CurvatureRadius;
 
+	//ToolTip: "Game Object that is being physically tracked (Probably user's head)"
+	// SPACEHOLDER
+	// Not sure why I needed this to be a pointer
+	// However, since this is just a place holder for the time being, I'll let it sit
+	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
+		UObject *headTransform;
+
+	//ToolTip: "Use simulated framerate in auto-pilot mode"
+	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
+		bool UseManulatTime = false;
+
+	//ToolTip: "Target simulated framerate in auto-pilot mode"
+	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
+		float TargetFPS = 60.0f;
+
+	// SPACEHOLDER * 3
+	UObject *body;
+	UObject *trackedSpace;
+	UObject *simulatedHead;
+
+	// SPACEHOLDER "Redirector"
+	UObject *redirector;
+	// SPACEHOLDER "Resetter"
+	UObject *resetter;
+	// SPACEHOLDER "ResetTrigger"
+	UObject *resetTrigger;
+	// SPACEHOLDER "TrailDrawer"
+	UObject *trailDrawer;
+	// SPACEHOLDER "SimulationManager"
+	UObject *simulationManager;
+	// SPACEHOLDER "SimulatedWalker"
+	UObject *simulatedWalker;
+	// SPACEHOLDER "KeyboardController"
+	UObject *keyboardController;
+	// SPACEHOLDER "SnapshotGenerator"
+	UObject *snapshotGenerator;
+	// SPACEHOLDER "StatisticsLogger"
+	UObject *statisticsLogger;
+	// SPACEHOLDER "HeadFollower"
+	UObject *headFollower;
+
+	FVector currPos, currPosReal, prevPos, prevPosReal;
+	FVector currDir, currDirReal, prevDir, prevDirReal;
+	FVector deltaPos;
+	float deltaDir;
+
+	// SPACEHOLDER "transform"
+	UObject *targetWayPoint;
+
+	bool inReset = false;
+	FString startTimeOfProgram;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
+
+	float simulatedTime = 0.0f;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

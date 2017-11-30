@@ -4,7 +4,12 @@
 
 
 // Sets default values
-ARDW_Mgr_Actor::ARDW_Mgr_Actor()
+ARDW_Mgr_Actor::ARDW_Mgr_Actor():
+	MaxTransGain(0.26f),
+	MinTransGain(-.14f),
+	MinRotGain(.49),
+	MaxRotGain(-.2f),
+	CurvatureRadius(7.5f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
