@@ -6,12 +6,15 @@
 
 
 // Sets default values
-ARDW_Mgr_Actor::ARDW_Mgr_Actor():
+ARDW_Mgr_Actor::ARDW_Mgr_Actor() :
 	MaxTransGain(0.26f),
 	MinTransGain(-.14f),
 	MinRotGain(.49),
 	MaxRotGain(-.2f),
-	CurvatureRadius(7.5f)
+	CurvatureRadius(7.5f),
+	TrackedSpacePosition(0.0, 0.0, 0.0),
+	TrackedSpaceRotation(0.0, 0.0, 90.0),
+	TrackedSpaceScale(10.0, 10.0, 1.0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -19,7 +22,7 @@ ARDW_Mgr_Actor::ARDW_Mgr_Actor():
 	startTimeOfProgram = FDateTime::Now();
 	//UE_LOG(LogTemp, Warning, TEXT("STart time of program = %s"), *startTimeOfProgram.ToString());
 
-	constructAvatar();
+	constructRedirectedUser();
 }
 
 // Called when the game starts or when spawned
@@ -36,11 +39,26 @@ void ARDW_Mgr_Actor::Tick(float DeltaTime)
 
 }
 
+// Build all of the procedural elements that make up the Redirected User
+// I only want there to be one object added to the scene
+void ARDW_Mgr_Actor::constructRedirectedUser()
+{
+	// Create a scene component which will act as the parent for everything
+	topNode = CreateDefaultSubobject<USceneComponent>(TEXT("Redirected User"));
+	RootComponent = topNode;
+
+	constructAvatar();
+	constructTrackedSpace();
+}
+
+// Procedural creation of Avatar Body. I supposed this could have been created with a Blueprint.
+// However I am looking to create this procedurally so the code will be more less locked and less
+// easily changed.
 void ARDW_Mgr_Actor::constructAvatar()
 {
 	// The scene compnent will act as the container for the avatar
 	body = CreateDefaultSubobject<USceneComponent>(TEXT("Body"));
-	RootComponent = body;
+	body->SetupAttachment(topNode);
 	body->SetRelativeLocation(FVector(0.0, 0.0, 44.0));
 	
 	//Add the components of the Body Avatar
@@ -72,6 +90,28 @@ void ARDW_Mgr_Actor::constructAvatar()
 		visualOrientation->SetWorldScale3D(FVector(0.075, 0.075, 0.1));
 		visualOrientation->SetRelativeLocationAndRotation(FVector(0.0, 20.0, 20.0), FRotator(90.0, 0.0, 90.0));
 		visualOrientation->SetMaterial(0, Material);
+	}
+}
+
+// Creating another procedural element in the Redireection Manager/
+// This one stablished the tracked area foot print and the basic bounding/trigger box
+void ARDW_Mgr_Actor::constructTrackedSpace()
+{
+	// The scene compnent will act as the container for the aTracked space
+	trackedSpace = CreateDefaultSubobject<USceneComponent>(TEXT("Tracked Space"));
+	trackedSpace->SetupAttachment(topNode);
+	trackedSpace->SetRelativeLocationAndRotation(TrackedSpacePosition, TrackedSpaceRotation);
+	trackedSpace->SetRelativeScale3D(TrackedSpaceScale);
+
+	//Create the box which will act as the floor plane for the tracked space
+	UStaticMeshComponent* plane = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Plane"));
+	plane->SetupAttachment(trackedSpace);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>planeAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
+	if (planeAsset.Succeeded())
+	{
+		plane->SetStaticMesh(planeAsset.Object);
+		plane->SetWorldScale3D(FVector(100.0, 100.0, 10.0));
+		plane->SetRelativeLocation(FVector(0.0, 0.0, -0.05));
 	}
 }
 

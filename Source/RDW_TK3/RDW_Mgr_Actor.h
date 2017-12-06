@@ -73,9 +73,17 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
 		UMaterial *Material;
 
+	UPROPERTY(EditAnywhere, Category = "Tracked Space")
+		FVector TrackedSpacePosition;
+	UPROPERTY(EditAnywhere, Category = "Tracked Space")
+		FRotator TrackedSpaceRotation;
+	UPROPERTY(EditAnywhere, Category = "Tracked Space")
+		FVector TrackedSpaceScale;
+
 	// SPACEHOLDER * 3
+	USceneComponent *topNode;
 	USceneComponent *body;
-	UObject *trackedSpace;
+	USceneComponent *trackedSpace;
 	UObject *simulatedHead;
 
 	// SPACEHOLDER "Redirector"
@@ -117,7 +125,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void constructRedirectedUser();
 	void constructAvatar();
+	void constructTrackedSpace();
 
 private:
 	FDateTime startTimeOfProgram;
