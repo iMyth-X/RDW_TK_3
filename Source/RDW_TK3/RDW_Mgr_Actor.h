@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Materials/Material.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "RDW_Mgr_Actor.generated.h"
@@ -69,8 +70,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
 		float TargetFPS = 60.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Redirected Walking")
+		UMaterial *Material;
+
 	// SPACEHOLDER * 3
-	UObject *body;
+	USceneComponent *body;
 	UObject *trackedSpace;
 	UObject *simulatedHead;
 
@@ -114,7 +118,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void constructAvatar();
-	void getBody();
 
 private:
 	FDateTime startTimeOfProgram;
