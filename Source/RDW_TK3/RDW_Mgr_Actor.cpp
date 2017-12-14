@@ -13,7 +13,7 @@ ARDW_Mgr_Actor::ARDW_Mgr_Actor() :
 	MaxRotGain(-.2f),
 	CurvatureRadius(7.5f),
 	TrackedSpacePosition(0.0, 0.0, 0.0),
-	TrackedSpaceRotation(0.0, 0.0, 90.0),
+	TrackedSpaceRotation(0.0, 0.0, 0.0),
 	TrackedSpaceScale(10.0, 10.0, 1.0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -110,8 +110,8 @@ void ARDW_Mgr_Actor::constructTrackedSpace()
 	if (planeAsset.Succeeded())
 	{
 		plane->SetStaticMesh(planeAsset.Object);
-		plane->SetWorldScale3D(FVector(100.0, 100.0, 10.0));
-		plane->SetRelativeLocation(FVector(0.0, 0.0, -0.05));
+		plane->SetWorldScale3D(FVector(10.0, 10.0, 0.10));
+		plane->SetRelativeLocation(FVector(0.0, 0.0, 0.0));
 	}
 }
 
