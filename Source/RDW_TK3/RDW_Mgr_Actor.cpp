@@ -49,6 +49,7 @@ void ARDW_Mgr_Actor::constructRedirectedUser()
 
 	constructAvatar();
 	constructTrackedSpace();
+	constructSimulatedUser();
 }
 
 // Procedural creation of Avatar Body. I supposed this could have been created with a Blueprint.
@@ -115,3 +116,18 @@ void ARDW_Mgr_Actor::constructTrackedSpace()
 	}
 }
 
+// Creating another procedural element in the Redireection Manager/
+// This one Houses the simulation Camera that will display the simulation POV
+void ARDW_Mgr_Actor::constructSimulatedUser()
+{
+	// The scene compnent will act as the container for the simulated User
+	simulatedUser = CreateDefaultSubobject<USceneComponent>(TEXT("Simulated User"));
+	simulatedUser->SetupAttachment(topNode);
+
+	//Create the camera which will act as the view spot for the simulated User
+	simulatedHead = CreateDefaultSubobject<UCameraComponent>(TEXT("Simulated Head"));
+	simulatedHead->SetupAttachment(simulatedUser);
+	// I'm not real happy with the location of the camera. Hopefully this won't impact performance
+	// But maybe I am just setting myself up for trouble
+	simulatedHead->SetRelativeLocationAndRotation(FVector(0.0, 20.0, 62.0), FRotator(0.0, 90.0, 0.0));
+}

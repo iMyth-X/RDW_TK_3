@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Materials/Material.h"
+#include "Camera/CameraComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "RDW_Mgr_Actor.generated.h"
@@ -84,7 +85,8 @@ public:
 	USceneComponent *topNode;
 	USceneComponent *body;
 	USceneComponent *trackedSpace;
-	UObject *simulatedHead;
+	USceneComponent *simulatedUser;
+	UCameraComponent *simulatedHead;
 
 	// SPACEHOLDER "Redirector"
 	UObject *redirector;
@@ -128,6 +130,7 @@ public:
 	void constructRedirectedUser();
 	void constructAvatar();
 	void constructTrackedSpace();
+	void constructSimulatedUser();
 
 private:
 	FDateTime startTimeOfProgram;
