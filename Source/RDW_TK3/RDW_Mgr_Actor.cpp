@@ -2,6 +2,7 @@
 
 #include "RDW_Mgr_Actor.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/BoxComponent.h"
 #include "ConstructorHelpers.h"
 
 
@@ -14,7 +15,7 @@ ARDW_Mgr_Actor::ARDW_Mgr_Actor() :
 	CurvatureRadius(7.5f),
 	TrackedSpacePosition(0.0, 0.0, 0.0),
 	TrackedSpaceRotation(0.0, 0.0, 0.0),
-	TrackedSpaceScale(10.0, 10.0, 1.0)
+	TrackedSpaceScale(10.0, 10.0, 1.0)		// Hardcoding the scale for now, embarrasing I know!
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -38,6 +39,16 @@ void ARDW_Mgr_Actor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+// Called whenever a property  value changes
+//void ARDW_Mgr_Actor::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+//{
+//	FName PropertyName = (PropertyChangedEvent.Property != NULL) ? PropertyChangedEvent.Property->GetFName() : NAME_None;
+//
+//	if ((PropertyName == GET_MEMBER_NAME_CHECKED(UPaperTileLayer, LayerWidth)) || (PropertyName == GET_MEMBER_NAME_CHECKED(UPaperTileLayer, LayerHeight)))
+//		Do some stuff
+//	}
+//}
 
 // Build all of the procedural elements that make up the Redirected User
 // I only want there to be one object added to the scene
@@ -98,11 +109,11 @@ void ARDW_Mgr_Actor::constructAvatar()
 // This one stablished the tracked area foot print and the basic bounding/trigger box
 void ARDW_Mgr_Actor::constructTrackedSpace()
 {
+	float planeHeightScale = 0.1;
+	float resetColliderHeight = 50;
 	// The scene compnent will act as the container for the aTracked space
 	trackedSpace = CreateDefaultSubobject<USceneComponent>(TEXT("Tracked Space"));
 	trackedSpace->SetupAttachment(topNode);
-	trackedSpace->SetRelativeLocationAndRotation(TrackedSpacePosition, TrackedSpaceRotation);
-	trackedSpace->SetRelativeScale3D(TrackedSpaceScale);
 
 	//Create the box which will act as the floor plane for the tracked space
 	UStaticMeshComponent* plane = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Plane"));
@@ -111,9 +122,25 @@ void ARDW_Mgr_Actor::constructTrackedSpace()
 	if (planeAsset.Succeeded())
 	{
 		plane->SetStaticMesh(planeAsset.Object);
-		plane->SetWorldScale3D(FVector(10.0, 10.0, 0.10));
-		plane->SetRelativeLocation(FVector(0.0, 0.0, 0.0));
+		plane->SetRelativeScale3D(FVector(TrackedSpaceScale.X, TrackedSpaceScale.Y, planeHeightScale));
+		FTransform planeTrans = FTransform(FRotator(0.0, 0.0, 0.0), FVector(1.0, 1.0, 1.0));
+		FVector planeBox = plane->CalcBounds(planeTrans).BoxExtent;
+		//UE_LOG(LogTemp, Warning, TEXT("planeBox=%s"), *planeBox.ToString());
+		//This statement does not work properly, if it did I would not need to multiply by planeScaleHeight
+		plane->SetRelativeLocation(FVector(0.0, 0.0, -planeHeightScale*planeBox.Z));
 	}
+
+	//Create a reset collider which is just a box about the size of the tracked SPace
+	UBoxComponent* resetCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("ResetCollider"));
+	resetCollider->SetupAttachment(trackedSpace);
+	FVector min, max;
+	plane->GetLocalBounds(min, max);
+	resetCollider->SetBoxExtent(FVector(50.0*TrackedSpaceScale.X, 50.0*TrackedSpaceScale.Y, resetColliderHeight));
+	// The plane's local bounds aren't quite working, else I would not need to multiply by planeScaleHeight
+	resetCollider->SetRelativeLocation(FVector(0.0, 0.0, resetCollider->GetUnscaledBoxExtent().Z-planeHeightScale*(max.Z-min.Z)));
+
+	//Apply the tracked space modifications. In the future the size and scale of this platform will be set by the UPROPERTY
+	trackedSpace->SetRelativeLocationAndRotation(TrackedSpacePosition, TrackedSpaceRotation);
 }
 
 // Creating another procedural element in the Redireection Manager/

@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+//#include "Object.h"
 #include "RDW_Mgr_Actor.generated.h"
 
 // Still not correct, I need to figure how to embed this within the class itself
@@ -126,6 +127,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	//virtual void PostEditChangeProperty(struct FPropertyChangeEvent&) override;
 
 	void constructRedirectedUser();
 	void constructAvatar();
